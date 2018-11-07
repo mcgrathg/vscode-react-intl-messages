@@ -1,8 +1,7 @@
 import { DefinitionProvider, TextDocument, Position, CancellationToken, Location, Uri } from "vscode";
-import { getCurrentLine, findImportPath, genImportRegExp, dashesCamelCase, CamelCaseValues } from "./utils";
+import { getCurrentLine, findImportPath, genImportRegExp } from "./utils";
 import * as path from "path";
 import * as fs from "fs";
-import * as _ from "lodash";
 
 function getWords(line: string, position: Position): string {
     const headText = line.slice(0, position.character);

@@ -2,14 +2,13 @@
 import {
     languages,
     ExtensionContext,
-    DocumentFilter,
-    workspace,
+    DocumentFilter
 } from "vscode";
 import { MessagesCompletionProvider } from "./CompletionProvider";
 import { MessagesDefinitionProvider } from "./DefinitionProvider";
-import { CamelCaseValues } from "./utils";
+import { MessagesHoverProvider } from './HoverProvider';
 
-const extName = "cssModules";
+const extName = "reactIntl";
 
 export function activate(context: ExtensionContext) {
     const mode: DocumentFilter[] = [
@@ -17,15 +16,19 @@ export function activate(context: ExtensionContext) {
         { language: "javascriptreact", scheme: "file" },
         { language: "javascript", scheme: "file" }
     ];
-    const configuration = workspace.getConfiguration(extName);
-    const camelCaseConfig: CamelCaseValues = configuration.get("camelCase", false);
 
     context.subscriptions.push(
         languages.registerCompletionItemProvider(mode, new MessagesCompletionProvider(), ".")
     );
+
     context.subscriptions.push(
         languages.registerDefinitionProvider(mode, new MessagesDefinitionProvider())
     );
+
+    context.subscriptions.push(
+        languages.registerHoverProvider(mode, new MessagesHoverProvider())
+    );
+
 }
 
 export function deactivate() {

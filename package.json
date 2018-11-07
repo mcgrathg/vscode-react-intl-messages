@@ -21,19 +21,10 @@
         "onLanguage:javascript"
     ],
     "contributes": {
-        "configuration": {
-            "type": "object",
-            "title": "CSS Modules Configuration",
-            "properties": {
-                "cssModules.camelCase": {
-                    "type": [
-                        "boolean",
-                        "string"
-                    ],
-                    "default": false,
-                    "description": "Transform classnames in autocomplete suggestions."
-                }
-            }
+        "hoverProvider": true,
+        "completionProvider": {
+            "resolveProvider": "true",
+            "triggerCharacters": ["."]
         }
     },
     "main": "./out/src/extension",
@@ -54,7 +45,6 @@
     },
     "dependencies": {
         "extract-brackets": "^0.0.7",
-        "lodash": "^4.17.4",
         "really-relaxed-json": "^0.2.24"
     }
 }

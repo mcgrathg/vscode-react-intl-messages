@@ -1,6 +1,5 @@
 import { CompletionItemProvider, TextDocument, Position, CompletionItem, CompletionItemKind } from "vscode";
 import * as path from "path";
-import * as _ from "lodash";
 import {
     findImportPath,
     getAllMessages,
