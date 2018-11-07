@@ -3,7 +3,7 @@ import * as path from "path";
 import * as _ from "lodash";
 import {
     findImportPath,
-    getAllClassNames,
+    getAllMessages,
     getCurrentLine,
 } from "./utils";
 import { dashesCamelCase, CamelCaseValues } from "./utils";
@@ -59,14 +59,16 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
             return Promise.resolve([]);
         }
 
-        const classNames = getAllClassNames(importPath, field);
+        const messages = getAllMessages(importPath, field);
 
-        return Promise.resolve(classNames.map(_class => {
-            let name = _class;
-            if (!!this._classTransformer) {
-                name = this._classTransformer(name);
-            }
-            return new CompletionItem(name, CompletionItemKind.Variable);
+        return Promise.resolve(messages.map(message => {
+            const { name, defaultMessage, description } = message;
+            const completionItem = new CompletionItem(name, CompletionItemKind.Variable);
+            completionItem.detail = `\`${defaultMessage}\``;
+            completionItem.documentation = description;
+            
+
+            return completionItem;
         }));
     }
 }

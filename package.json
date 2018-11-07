@@ -53,6 +53,8 @@
         "vscode": "^1.0.0"
     },
     "dependencies": {
-        "lodash": "^4.17.4"
+        "extract-brackets": "^0.0.7",
+        "lodash": "^4.17.4",
+        "really-relaxed-json": "^0.2.24"
     }
 }
