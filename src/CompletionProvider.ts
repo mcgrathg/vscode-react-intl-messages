@@ -6,7 +6,6 @@ import {
     getAllMessages,
     getCurrentLine,
 } from "./utils";
-import { dashesCamelCase, CamelCaseValues } from "./utils";
 
 // check if current character or last character is .
 function isTrigger(line: string, position: Position): boolean {
@@ -23,7 +22,6 @@ function getWords(line: string, position: Position): string {
 
     return text.slice(index);
 }
-
 export class MessagesCompletionProvider implements CompletionItemProvider {
     provideCompletionItems(document: TextDocument, position: Position): Thenable<CompletionItem[]> {
         const currentLine = getCurrentLine(document, position);
@@ -52,7 +50,7 @@ export class MessagesCompletionProvider implements CompletionItemProvider {
             const completionItem = new CompletionItem(name, CompletionItemKind.Variable);
             completionItem.detail = `\`${defaultMessage}\``;
             completionItem.documentation = description;
-            
+
             return completionItem;
         }));
     }

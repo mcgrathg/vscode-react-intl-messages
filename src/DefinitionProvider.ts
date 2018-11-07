@@ -30,7 +30,7 @@ function getPosition(filePath: string, className: string): Position {
 
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-  
+
         character = line.indexOf(keyWord);
 
         if (character !== -1) {
