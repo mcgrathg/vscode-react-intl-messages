@@ -24,21 +24,7 @@ function getWords(line: string, position: Position): string {
     return text.slice(index);
 }
 
-export class CSSModuleCompletionProvider implements CompletionItemProvider {
-    _classTransformer = null;
-
-    constructor(camelCaseConfig?: CamelCaseValues) {
-        switch (camelCaseConfig) {
-            case true:
-              this._classTransformer = _.camelCase;
-              break;
-            case "dashes":
-              this._classTransformer = dashesCamelCase;
-              break;
-            default: break;
-        }
-    }
-
+export class MessagesCompletionProvider implements CompletionItemProvider {
     provideCompletionItems(document: TextDocument, position: Position): Thenable<CompletionItem[]> {
         const currentLine = getCurrentLine(document, position);
         const currentDir = path.dirname(document.uri.fsPath);
@@ -67,10 +53,9 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
             completionItem.detail = `\`${defaultMessage}\``;
             completionItem.documentation = description;
             
-
             return completionItem;
         }));
     }
 }
 
-export default CSSModuleCompletionProvider;
+export default MessagesCompletionProvider;

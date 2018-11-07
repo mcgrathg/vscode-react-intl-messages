@@ -5,8 +5,8 @@ import {
     DocumentFilter,
     workspace,
 } from "vscode";
-import { CSSModuleCompletionProvider } from "./CompletionProvider";
-import { CSSModuleDefinitionProvider } from "./DefinitionProvider";
+import { MessagesCompletionProvider } from "./CompletionProvider";
+import { MessagesDefinitionProvider } from "./DefinitionProvider";
 import { CamelCaseValues } from "./utils";
 
 const extName = "cssModules";
@@ -21,10 +21,10 @@ export function activate(context: ExtensionContext) {
     const camelCaseConfig: CamelCaseValues = configuration.get("camelCase", false);
 
     context.subscriptions.push(
-        languages.registerCompletionItemProvider(mode, new CSSModuleCompletionProvider(camelCaseConfig), ".")
+        languages.registerCompletionItemProvider(mode, new MessagesCompletionProvider(), ".")
     );
     context.subscriptions.push(
-        languages.registerDefinitionProvider(mode, new CSSModuleDefinitionProvider(camelCaseConfig))
+        languages.registerDefinitionProvider(mode, new MessagesDefinitionProvider())
     );
 }
 
