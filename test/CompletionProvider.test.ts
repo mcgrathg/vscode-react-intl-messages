@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
 import * as path from "path";
-import { CSSModuleCompletionProvider } from "../src/CompletionProvider";
+import { MessagesCompletionProvider } from "../src/CompletionProvider";
 
 import { CamelCaseValues } from "../src/utils";
 
@@ -11,16 +11,16 @@ const uri = vscode.Uri.file(tsxFile);
 
 function testCompletion(position: vscode.Position) {
     return vscode.workspace.openTextDocument(uri).then(text => {
-        const provider = new CSSModuleCompletionProvider();
+        const provider = new MessagesCompletionProvider();
         return provider.provideCompletionItems(text, position).then(items => {
             assert.equal(5, items.length);
         });
     });
 }
 
-function testCompletionWithCase(position: vscode.Position, camelCaseConfig: CamelCaseValues, assertions: Array<Function>) {
+function testCompletionWithCase(position: vscode.Position, assertions: Array<Function>) {
     return vscode.workspace.openTextDocument(uri).then(text => {
-        const provider = new CSSModuleCompletionProvider(camelCaseConfig);
+        const provider = new MessagesCompletionProvider();
         return provider.provideCompletionItems(text, position).then(items => {
             assertions.map((assertion) => assertion(items));
         });

@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
 import * as path from "path";
-import { CSSModuleDefinitionProvider } from "../src/DefinitionProvider";
+import { MessagesDefinitionProvider } from "../src/DefinitionProvider";
 
 import { CamelCaseValues } from "../src/utils";
 
@@ -11,7 +11,7 @@ const uri = vscode.Uri.file(tsxFile);
 
 function testDefinition(position: vscode.Position) {
     return vscode.workspace.openTextDocument(uri).then(text => {
-        const provider = new CSSModuleDefinitionProvider;
+        const provider = new MessagesDefinitionProvider;
         return provider.provideDefinition(text, position, undefined).then(location => {
             const {line, character} = location.range.start;
             assert.equal(true, line === 2 && character === 1);
@@ -21,7 +21,7 @@ function testDefinition(position: vscode.Position) {
 
 function testDefinitionWithCase(position: vscode.Position, camelCaseConfig: CamelCaseValues, assertions: Array<Function>) {
     return vscode.workspace.openTextDocument(uri).then(text => {
-        const provider = new CSSModuleDefinitionProvider(camelCaseConfig);
+        const provider = new MessagesDefinitionProvider(camelCaseConfig);
         return provider.provideDefinition(text, position, undefined).then(location => {
             const position = location ? location.range.start : null;
             assertions.map((assertion) => assertion(position));
