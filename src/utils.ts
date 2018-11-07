@@ -33,9 +33,7 @@ export function findImportPath(text: string, key: string, parentPath: string): s
                 }
             }
         }
-
-
-
+        
         return importPath;
     } else {
         return "";
