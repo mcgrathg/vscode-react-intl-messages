@@ -22,19 +22,9 @@ export function findImportPath(text: string, key: string, parentPath: string): s
     const re = genImportRegExp(key);
     const results = re.exec(text);
     if (!!results && results.length > 0) {
-        let importPath = path.resolve(parentPath, results[results.length - 1]);
+        const importPath = path.resolve(parentPath, results[results.length - 1]);
 
-        if (!fs.existsSync(importPath)) {
-            const possibleExtensions = ['js', 'jsx', 'ts', 'tsx'];
-            for (let i=0; i < possibleExtensions.length; i++) {
-                if (fs.existsSync(importPath + '.' + possibleExtensions[i])) {
-                    importPath = importPath + '.' + possibleExtensions[i];
-                    break;
-                }
-            }
-        }
-        
-        return importPath;
+        return getFileWithExtension(importPath);
     } else {
         return "";
     }
@@ -64,4 +54,55 @@ export function getAllMessages(filePath: string, keyword: string): { name: strin
     }
  
     return keyword !== "" ? messages.filter(({ name }) => name === keyword) : messages;
+}
+
+export function getWordsAtPosition(document: TextDocument, position: Position): string {
+    const currentLine = getCurrentLine(document, position);
+    const words = getWords(currentLine, position);
+    if (words === "" || words.indexOf(".") === -1) {
+        return null;
+    }
+
+    return words;
+}
+
+export function getWords(line: string, position: Position): string {
+    const text = line.slice(0, position.character);
+    const index = text.search(/[a-zA-Z0-9\._]*$/);
+    if (index === -1) {
+        return "";
+    }
+
+    return text.slice(index).replace("...", "");
+}
+
+export function getFileWithExtension(file: string): string {
+    if (!fs.existsSync(file)) {
+        const possibleExtensions = ['js', 'jsx', 'ts', 'tsx'];
+        for (let i = 0; i < possibleExtensions.length; i++) {
+            if (fs.existsSync(file + '.' + possibleExtensions[i])) {
+                file = file + '.' + possibleExtensions[i];
+                break;
+            }
+        }
+    }
+
+    return file;
+}
+
+export function getImportPathByPosition(document: TextDocument, position: Position) {
+    const words = getWordsAtPosition(document, position);
+
+    if (words === null) {
+        return null;
+    }
+
+    const [obj] = words.split(".");
+    const currentDir = path.dirname(document.uri.fsPath);
+    const importPath = findImportPath(document.getText(), obj, currentDir);
+    if (importPath === "") {
+        return null;
+    }
+
+    return importPath
 }

@@ -1,23 +1,7 @@
 import { DefinitionProvider, TextDocument, Position, CancellationToken, Location, Uri } from "vscode";
-import { getCurrentLine, findImportPath, genImportRegExp } from "./utils";
+import { getCurrentLine,  genImportRegExp, getImportPathByPosition } from "./utils";
 import * as path from "path";
 import * as fs from "fs";
-
-function getWords(line: string, position: Position): string {
-    const headText = line.slice(0, position.character);
-    const startIndex = headText.search(/[a-zA-Z0-9\._]*$/);
-    // not found or not clicking object field
-    if (startIndex === -1 || headText.slice(startIndex).indexOf(".") === -1) {
-        return "";
-    }
-
-    const match = /^([a-zA-Z0-9\._]*)/.exec(line.slice(startIndex));
-    if (match === null) {
-        return "";
-    }
-
-    return match[1];
-}
 
 function getPosition(filePath: string, className: string): Position {
     const content = fs.readFileSync(filePath, { encoding: "utf8" });
@@ -41,7 +25,7 @@ function getPosition(filePath: string, className: string): Position {
     if (lineNumber === -1) {
         return null;
     } else {
-        return new Position(lineNumber, character + 1);
+        return new Position(lineNumber, character);
     }
 }
 
@@ -60,30 +44,26 @@ function isImportLineMatch(line: string, matches: RegExpExecArray, current: numb
 export class MessagesDefinitionProvider implements DefinitionProvider {
 
     public provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Thenable<Location> {
-        const currentDir = path.dirname(document.uri.fsPath);
         const currentLine = getCurrentLine(document, position);
 
         const matches = genImportRegExp("(\\S+)").exec(currentLine);
         if (isImportLineMatch(currentLine, matches, position.character)) {
-            return Promise.resolve(new Location(
-                Uri.file(path.resolve(currentDir, matches[matches.length - 1])),
-                new Position(0, 0)
-            ));
-        }
-
-        const words = getWords(currentLine, position);
-        if (words === "" || words.indexOf(".") === -1) {
             return Promise.resolve(null);
         }
 
-        const [obj, field] = words.split(".");
-        const importPath = findImportPath(document.getText(), obj, currentDir);
+        const wordRange = document.getWordRangeAtPosition(position);
+        if (!wordRange) {
+            return Promise.resolve(null);
+        }
+
+        const importPath = getImportPathByPosition(document, wordRange.end);
         if (importPath === "") {
             return Promise.resolve(null);
         }
 
-        const targetPosition = getPosition(importPath, field);
+        const field = document.getText(wordRange);
 
+        const targetPosition = getPosition(importPath, field);
         if (targetPosition === null) {
             return Promise.resolve(null);
         } else {
