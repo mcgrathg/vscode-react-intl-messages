@@ -54,10 +54,14 @@ export class MessagesCompletionProvider implements CompletionItemProvider {
         const { name, defaultMessage, description } = message;
         const completionItem = new CompletionItem(
           name,
-          CompletionItemKind.Variable,
+          CompletionItemKind.Value
         );
-        completionItem.detail = `\`${defaultMessage}\``;
+
+        completionItem.detail = `"${defaultMessage}"`;
         completionItem.documentation = description;
+        completionItem.insertText = name;
+        completionItem.label = `${name} ("${defaultMessage}")`;
+        completionItem.sortText = `.${completionItem.label}`;
 
         return completionItem;
       }),

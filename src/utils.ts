@@ -62,7 +62,7 @@ export function getAllMessages(
       : {};
 
     messages.push(
-      ...Object.keys(messagesObj).map(name => ({ ...messagesObj[name], name })),
+      ...Object.keys(messagesObj).map(name => ({ name, ...messagesObj[name] })),
     );
   } catch (ex) {
     console.error(ex);
