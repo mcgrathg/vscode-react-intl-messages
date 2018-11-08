@@ -3,8 +3,6 @@ import * as vscode from "vscode";
 import * as path from "path";
 import { MessagesCompletionProvider } from "../src/CompletionProvider";
 
-import { CamelCaseValues } from "../src/utils";
-
 const rootPath = path.join(__dirname, "../..");
 const tsxFile = path.join(rootPath, "./test/fixtures/sample.jsx");
 const uri = vscode.Uri.file(tsxFile);
@@ -48,7 +46,7 @@ test("test commonJS style completion", () => {
 test("test camelCase:false style completion", () => {
     const position = new vscode.Position(5, 21);
     return Promise.resolve(
-        testCompletionWithCase(position, false, [
+        testCompletionWithCase(position, [
             (items) => assert.equal(1, items.length),
             (items) => assert.equal("sidebar_without-header", items[0].label),
         ])
@@ -60,7 +58,7 @@ test("test camelCase:false style completion", () => {
 test("test camelCase:true style completion", () => {
     const position = new vscode.Position(5, 21);
     return Promise.resolve(
-        testCompletionWithCase(position, true, [
+        testCompletionWithCase(position, [
             (items) => assert.equal(1, items.length),
             (items) => assert.equal("sidebarWithoutHeader", items[0].label),
         ])
@@ -72,7 +70,7 @@ test("test camelCase:true style completion", () => {
 test("test camelCase:dashes style completion", () => {
     const position = new vscode.Position(5, 21);
     return Promise.resolve(
-        testCompletionWithCase(position, "dashes", [
+        testCompletionWithCase(position, [
             (items) => assert.equal(1, items.length),
             (items) => assert.equal("sidebar_withoutHeader", items[0].label),
         ])
