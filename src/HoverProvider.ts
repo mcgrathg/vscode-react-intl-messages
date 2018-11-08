@@ -5,13 +5,13 @@ import {
   CancellationToken,
   Hover,
   MarkedString,
-} from "vscode";
+} from 'vscode';
 
 import {
   getAllMessages,
   getImportPathByWords,
   getWordsAtPosition,
-} from "./utils";
+} from './utils';
 
 export class MessagesHoverProvider implements HoverProvider {
   provideHover(
@@ -34,14 +34,14 @@ export class MessagesHoverProvider implements HoverProvider {
     const field = document.getText(wordRange);
     const isFieldFiltered = field !== words;
 
-    const messages = getAllMessages(importPath, isFieldFiltered ? field : "");
+    const messages = getAllMessages(importPath, isFieldFiltered ? field : '');
 
     if (!messages) {
       return Promise.resolve(null);
     }
 
     const contents: MarkedString[] = [
-      { value: JSON.stringify(messages, null, 2), language: "json" },
+      { value: JSON.stringify(messages, null, 2), language: 'json' },
     ];
     const hover = new Hover(contents, wordRange);
 
